@@ -20,6 +20,13 @@ renderFromHelper.propTypes = {
   touched: PropTypes.bool,
   error: PropTypes.bool,
 };
+// const renderChildren = (children) => {
+//   if (typeof children === "function") {
+//     return children(children);
+//   } else {
+//     return null;
+//   }
+// };
 const renderSelectField = ({
   classes,
   input,
@@ -41,6 +48,7 @@ const renderSelectField = ({
         value={input.value}
       >
         {children}
+        {/* {renderChildren()} */}
       </Select>
       {renderFromHelper({ touched, error })}
     </FormControl>

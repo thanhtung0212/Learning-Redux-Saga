@@ -17,25 +17,31 @@ import renderTextField from "../../components/FormHelper/TextField";
 import validate from "./validate";
 import renderSelectField from "../../components/FormHelper/Select";
 
-class TaskForm extends React.Component {
-  handleSubmitForm = (data) => {
-    const { taskActionsCreators } = this.props;
-    const { addTask } = taskActionsCreators;
-    const { title, description } = data;
-    addTask(title, description);
+function TaskForm(props) {
+  const handleSubmitForm = (data) => {
+    const { taskActionsCreators, taskEditing } = props;
+    const { addTask, updateTask } = taskActionsCreators;
+    const { title, description, status } = data;
+    if (taskEditing && taskEditing.id) {
+      updateTask(title, description, status);
+    } else {
+      addTask(title, description);
+    }
   };
 
-  renderStatusSelection() {
+  const renderStatusSelection = () => {
     let xhtml = null;
-    const { taskEditing, classes } = this.props;
+    const { taskEditing, classes } = props;
+
     if (taskEditing && taskEditing.id) {
       xhtml = (
         <Field
-          id="status"
+          // id="status"
           label="Trạng thái"
           className={classes.select}
           name="status"
           component={renderSelectField}
+          // value={status}
         >
           <MenuItem value={0}>Ready</MenuItem>
           <MenuItem value={1}>In Progress</MenuItem>
@@ -45,65 +51,57 @@ class TaskForm extends React.Component {
     }
 
     return xhtml;
-  }
+  };
 
-  render() {
-    const {
-      classes,
-      modalActions,
-      handleSubmit,
-      invalid,
-      submitting,
-    } = this.props;
+  const { classes, modalActions, handleSubmit, invalid, submitting } = props;
 
-    const { hideModal } = modalActions;
-    return (
-      <form onSubmit={handleSubmit(this.handleSubmitForm)}>
-        <Grid container>
-          <Grid item md={12}>
-            <Field
-              id="title"
-              label="Title"
-              className={classes.textField}
-              margin="normal"
-              name="title"
-              component={renderTextField}
-            />
-          </Grid>
-          <Grid item md={12}>
-            <Field
-              id="description"
-              label="Description"
-              className={classes.textField}
-              margin="normal"
-              name="description"
-              component={renderTextField}
-            />
-          </Grid>
-          {this.renderStatusSelection()}
-          <Grid item md={12}>
-            <Box display="flex" flexDirection="row-reverse" mt={2}>
-              <Box ml={1}>
-                <Button variant="contained" onClick={hideModal}>
-                  Cancel
-                </Button>
-              </Box>
-              <Box>
-                <Button
-                  disabled={invalid || submitting}
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                >
-                  Save
-                </Button>
-              </Box>
-            </Box>
-          </Grid>
+  const { hideModal } = modalActions;
+  return (
+    <form onSubmit={handleSubmit(handleSubmitForm)}>
+      <Grid container>
+        <Grid item md={12}>
+          <Field
+            id="title"
+            label="Title"
+            className={classes.textField}
+            margin="normal"
+            name="title"
+            component={renderTextField}
+          />
         </Grid>
-      </form>
-    );
-  }
+        <Grid item md={12}>
+          <Field
+            id="description"
+            label="Description"
+            className={classes.textField}
+            margin="normal"
+            name="description"
+            component={renderTextField}
+          />
+        </Grid>
+        {renderStatusSelection()}
+        <Grid item md={12}>
+          <Box display="flex" flexDirection="row-reverse" mt={2}>
+            <Box ml={1}>
+              <Button variant="contained" onClick={hideModal}>
+                Cancel
+              </Button>
+            </Box>
+            <Box>
+              <Button
+                disabled={invalid || submitting}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                Save
+              </Button>
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </form>
+  );
 }
 TaskForm.propTypes = {
   open: PropTypes.bool,
@@ -113,6 +111,7 @@ TaskForm.propTypes = {
   }),
   taskActionsCreators: PropTypes.shape({
     addTask: PropTypes.func,
+    updateTask: PropTypes.func,
   }),
   handleSubmit: PropTypes.func,
   invalod: PropTypes.bool,

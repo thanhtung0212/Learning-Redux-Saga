@@ -1,5 +1,6 @@
 // import * as taskApis from "../apis/task";
 import * as taskConstants from "../contants/task";
+import { STATUSES } from "../contants/index";
 
 export const fetchListTask = (params = {}) => {
   return {
@@ -75,12 +76,13 @@ export const setTaskEditing = (task) => {
     },
   };
 };
-export const updateTask = (title, description) => {
+export const updateTask = (title, description, status = STATUSES[0].value) => {
   return {
     type: taskConstants.UPDATE_TASK,
     payload: {
       title,
       description,
+      status,
     },
   };
 };
@@ -95,6 +97,30 @@ export const updateTaskSuccess = (data) => {
 export const updateTaskFailed = (error) => {
   return {
     type: taskConstants.UPDATE_TASK_FAILED,
+    payload: {
+      error,
+    },
+  };
+};
+export const deleteTask = (id) => {
+  return {
+    type: taskConstants.DELETE_TASK,
+    payload: {
+      id,
+    },
+  };
+};
+export const deleteTaskSuccess = (data) => {
+  return {
+    type: taskConstants.DELETE_TASK_SUCCESS,
+    payload: {
+      data,
+    },
+  };
+};
+export const deleteTaskFailed = (error) => {
+  return {
+    type: taskConstants.DELETE_TASK_FAILED,
     payload: {
       error,
     },

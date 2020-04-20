@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 import styles from "./styles";
 
 function TaskItem(props) {
-  const { classes, task, status, onClickEdit } = props;
+  const { classes, task, status, onClickEdit, onClickDelete } = props;
   const { id, title } = task;
 
   return (
@@ -34,6 +34,7 @@ function TaskItem(props) {
           variant="contained"
           color="secondary"
           startIcon={<DeleteIcon />}
+          onClick={onClickDelete}
         >
           Delete
         </Button>
@@ -55,5 +56,6 @@ TaskItem.propTypes = {
   task: PropTypes.object,
   status: PropTypes.object,
   onClickEdit: PropTypes.func,
+  onClickDelete: PropTypes.func,
 };
 export default withStyles(styles)(TaskItem);
